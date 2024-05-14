@@ -2,12 +2,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./util/database'); 
+const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes'); // Ensure this path is correct
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

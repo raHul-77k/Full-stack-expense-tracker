@@ -42,13 +42,15 @@ exports.postLoginDetails = async (req, res, next) => {
         // Check if the user exists
         const user = await User.findOne({ where: { Email } });
         if (!user) {
-            return res.status(400).json({ error: 'User does not exist' });
+            console.log("User not found");
+            return res.status(404).json({ error: 'User does not exist' });
         }
 
         // Check if the password matches
         const isMatch = await bcrypt.compare(Password, user.Password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid password' });
+            console.log("Invalid password");
+            return res.status(401).json({ error: 'User not authorized' });
         }
 
         console.log("Login successful");
@@ -57,4 +59,4 @@ exports.postLoginDetails = async (req, res, next) => {
         console.log("Error:", error);
         res.status(500).json({ error: 'An error occurred', details: error.message });
     }
-};
+};   
