@@ -8,5 +8,9 @@
     "start": "nodemon app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^3.9.7",
+    "sequelize": "^6.37.3"
+  }
 }
