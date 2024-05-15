@@ -22,7 +22,7 @@ exports.postUserDetails = async (req, res, next) => {
         const data = await User.create({
             Name: Name,
             Email: Email,
-            Password: Password,
+            Password: hashedPassword,
         });
         
         res.status(200).json({ userData: data });
@@ -37,7 +37,7 @@ exports.postLoginDetails = async (req, res, next) => {
     console.log(req.body);
     try {
         const { Email, Password } = req.body;
-        console.log(Email, Password);
+        console.log("Email:", Email);
 
         // Check if the user exists
         const user = await User.findOne({ where: { Email } });
@@ -46,8 +46,11 @@ exports.postLoginDetails = async (req, res, next) => {
             return res.status(404).json({ error: 'User does not exist' });
         }
 
+        console.log("User found:", user.toJSON());
+
         // Check if the password matches
         const isMatch = await bcrypt.compare(Password, user.Password);
+        console.log("Password match:", isMatch);
         if (!isMatch) {
             console.log("Invalid password");
             return res.status(401).json({ error: 'User not authorized' });
