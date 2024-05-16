@@ -52,7 +52,7 @@
                 }
 
                 alert('Login successful');
-                form.reset(); // Reset the form on successful login
+                window.location.href = 'expense.html'; // Redirect to expense.html on successful login
 
             } catch (error) {
                 console.error("Error occurred:", error);
@@ -67,4 +67,3 @@
     </script>
 </body>
 </html>
-    

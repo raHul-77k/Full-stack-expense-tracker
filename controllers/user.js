@@ -57,7 +57,7 @@ exports.postLoginDetails = async (req, res, next) => {
         }
 
         console.log("Login successful");
-        res.status(200).json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful', redirectUrl: '/expense.html' });
     } catch (error) {
         console.log("Error:", error);
         res.status(500).json({ error: 'An error occurred', details: error.message });

@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const sequelize = require('./util/database'); 
 const cors = require('cors');
 
-const userRoutes = require('./routes/userRoutes'); // Ensure this path is correct
+const userRoutes = require('./routes/userRoutes'); 
+const userExpense = require('./routes/expenseRoute');
 
 const app = express();
 const PORT = 3000;
@@ -18,8 +19,9 @@ app.use(express.static('public'));
 
 // Use userRoutes for /user route
 app.use('/user', userRoutes);
+app.use('/expense', userExpense);
 
-// Sync the database
+// Sync the database  
 sequelize.sync({force : true})
     .then(() => {
         console.log('Database synced successfully.');
