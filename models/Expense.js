@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
+const User = require('./User');
 
 const Expense = sequelize.define('Expense', {
     id: {

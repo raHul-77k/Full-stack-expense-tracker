@@ -6,10 +6,14 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes'); 
 const userExpense = require('./routes/expenseRoute');
+const User = require('./models/User');
+const Expense = require('./models/Expense');
+
 
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,8 +25,13 @@ app.use(express.static('public'));
 app.use('/user', userRoutes);
 app.use('/expense', userExpense);
 
+//relationship between user and expenses
+User.hasMany(Expense);
+Expense.belongsTo(User);
+
+
 // Sync the database  
-sequelize.sync({force : true})
+sequelize.sync({force : false})
     .then(() => {
         console.log('Database synced successfully.');
 

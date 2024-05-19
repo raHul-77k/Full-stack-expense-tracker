@@ -1,6 +1,7 @@
 // controllers/user.js
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 exports.postUserDetails = async (req, res, next) => {
     console.log("in postUserDetails");
@@ -24,13 +25,18 @@ exports.postUserDetails = async (req, res, next) => {
             Email: Email,
             Password: hashedPassword,
         });
-        
         res.status(200).json({ userData: data });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'An error occurred' });
     }
 };
+
+
+function generateAccessToken(id){
+    return jwt.sign({userId : id},'secretKey', { expiresIn: '1h' } )
+}
+
 
 exports.postLoginDetails = async (req, res, next) => {
     console.log("in postLoginDetails");
@@ -57,7 +63,7 @@ exports.postLoginDetails = async (req, res, next) => {
         }
 
         console.log("Login successful");
-        res.status(200).json({ message: 'Login successful', redirectUrl: '/expense.html' });
+        res.status(200).json({ message: 'Login successful', redirectUrl: '/expense.html', token : generateAccessToken(user.id)});
     } catch (error) {
         console.log("Error:", error);
         res.status(500).json({ error: 'An error occurred', details: error.message });
