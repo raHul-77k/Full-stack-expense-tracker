@@ -56,6 +56,7 @@
     <script>
         let currentPage = 1;
         let totalPages = 1;
+        let expensesPerPage = 10;
 
         document.getElementById('expenseForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -78,7 +79,7 @@
             })
             .then(function(response) {
                 if (response.status === 201) {
-                    loadExpenses(currentPage);
+                    loadExpenses(currentPage, expensesPerPage);
                 } else {
                     alert('Failed to add expense');
                 }
@@ -200,7 +201,7 @@
             document.getElementById('rzp-button1').remove();
             document.getElementById('membership').innerHTML = "You are a Premium-User";
             document.getElementById('downloadexpense').disabled = false;
-            loadExpenses(currentPage);
+            loadExpenses(currentPage, expensesPerPage);
         }
 
         function parseJwt(token) {
@@ -224,15 +225,29 @@
                 if (decodeToken && decodeToken.isPremiumuser) {
                     showPremiumuserMessage();
                 }
-                loadExpenses(currentPage);
+                setExpensesPerPage();
+                loadExpenses(currentPage, expensesPerPage);
             } else {
                 console.log('No token found');
             }
         });
 
-        function loadExpenses(page) {
+        function setExpensesPerPage() {
+            const screenHeight = window.innerHeight;
+            if (screenHeight > 1200) {
+                expensesPerPage = 40;
+            } else if (screenHeight > 800) {
+                expensesPerPage = 20;
+            } else if (screenHeight > 600) {
+                expensesPerPage = 10;
+            } else {
+                expensesPerPage = 5;
+            }
+        }
+
+        function loadExpenses(page, limit) {
             var token = localStorage.getItem('token');
-            axios.get(`http://localhost:3000/expense/getexpense?page=${page}`, {
+            axios.get(`http://localhost:3000/expense/getexpense?page=${page}&limit=${limit}`, {
                 headers: {
                     "Authorization": "Bearer " + token
                 }
@@ -259,7 +274,7 @@
                         })
                         .then(function (deleteResponse) {
                             if (deleteResponse.status === 200) {
-                                loadExpenses(currentPage);
+                                loadExpenses(currentPage, expensesPerPage);
                             } else {
                                 alert('Failed to delete expense');
                             }
@@ -290,17 +305,15 @@
 
         function prevPage() {
             if (currentPage > 1) {
-                loadExpenses(--currentPage);
+                loadExpenses(--currentPage, expensesPerPage);
             }
         }
 
         function nextPage() {
             if (currentPage < totalPages) {
-                loadExpenses(++currentPage);
+                loadExpenses(++currentPage, expensesPerPage);
             }
         }
-
-        loadExpenses(currentPage);
     </script>
 </body>
 </html>
